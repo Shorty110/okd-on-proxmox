@@ -1,0 +1,26 @@
+---
+
+infra:
+  hosts:
+    infra:
+      ansible_host: infra.lab
+
+proxmox:
+  hosts:
+    hv01:
+      ansible_host:	hv01.lab
+
+router:
+  hosts:
+    router:
+      ansible_host: router.lab
+      ansible_user: ubnt
+      ansible_password: !vault |
+        $ANSIBLE_VAULT;1.1;AES256
+        30346638616564336363646634646665356534376663336434303365656236623863323562306430
+        6265343530623034323439306362313736393034393033370a313063643863373635373534656138
+        66373835623362313266376339376238376263633834643838626639633264313165626661373364
+        6631616263333362320a333962323461353264343062653932313332643434663234616534373961
+        6336
+      ansible_network_os: edgeos
+      ansible_connection: network_cli

@@ -1,0 +1,61 @@
+---
+- name: 'Deploy VMs'
+  hosts: proxmox 
+  vars_files:
+    - ../vars/okd.yml
+  tasks:
+  - name: 'Stop all VMS' 
+    proxmox_kvm:
+      vmid: '{{  vmidprefix }}{{ item.vmid | default([])}}'
+      api_user: "{{ pve.api_user }}"
+      api_password: "{{ pve.api_password }}"
+      api_host: "{{ pve.api_host }}"
+      node: '{{ item.node | default(defaults.node) }}'
+      state       : stopped
+      force: yes
+    with_items: "{{ nodes }}"
+    ignore_errors: yes
+    tags: stop
+  - name: 'Remove all VMS if old ones are there' 
+    proxmox_kvm:
+      vmid: '{{ vmidprefix }}{{ item.vmid | default([])}}'
+      api_user: "{{ pve.api_user }}"
+      api_password: "{{ pve.api_password }}"
+      api_host: "{{ pve.api_host }}"
+      node: '{{ item.node | default(defaults.node) }}'
+      state       : absent
+    with_items: "{{ nodes }}"
+    tags: delete 
+    ignore_errors: yes
+  - name: 'create vms'
+    proxmox_kvm:
+      vmid: '{{ vmidprefix }}{{ item.vmid }}'
+      name: '{{ item.name }}'
+      onboot: '{{ defaults.onboot }}' 
+      boot: '{{ defaults.boot }}'
+      api_user: "{{ pve.api_user }}"
+      api_password: "{{ pve.api_password }}"
+      api_host: "{{ pve.api_host }}"
+      bios: "{{ defaults.bios }}"
+      cores: '{{ item.cores | default(defaults.cores) }}'
+      node: '{{ item.node | default(defaults.node) }}'
+      vcpus: '{{ item.vcpus | default(defaults.vcpus) }}'
+      memory: '{{ item.memory | default(defaults.memory) }}'
+      scsihw: '{{ item.scsihw | default(defaults.scsihw) }}'
+      sata: '{{ item.sata | default(defaults.sata) }}'
+      net: '{ {{ defaults.net }}:"virtio={{ item.macaddr }},bridge={{ defaults.bridge }},tag={{ defaults.vlan }},firewall={{ defaults.firewall }}"}'
+      state: 'present'
+    with_items: "{{ nodes }}"
+    loop_control:
+      pause: 10
+    tags: create
+  - name: 'start all vms' 
+    proxmox_kvm:
+      vmid: '{{ vmidprefix }}{{ item.vmid | default([])}}'
+      api_user: "{{ api_user }}"
+      api_password: "{{ api_password }}"
+      api_host: "{{ api_host }}"
+      node: '{{ item.node | default(defaults.node) }}'
+      state       : started
+    with_items: "{{ nodes }}"
+    tags: start

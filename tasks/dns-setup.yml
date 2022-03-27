@@ -1,0 +1,38 @@
+---
+- name: 'Configure DNS'
+  hosts: localhost
+  vars_files:
+    - ../vars/okd.yml
+  tasks:
+  - name: 'Delete old DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=delete&ip={{ item.ipaddr }}&domain={{ item.name }}.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+    with_items: "{{ nodes }}"
+  - name: 'Delete old api DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=delete&ip={{ infra.ipaddr }}&domain=api.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+  - name: 'Delete old api-int DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=delete&ip={{ infra.ipaddr }}&domain=api-int.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+  - name: 'Delete old application ingress DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=delete&ip={{ infra.ipaddr }}&domain=*.apps.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+  - name: 'Delete old bootstrap DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=delete&ip={{ bootstrap.ipaddr }}&domain=bootstrap.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+  - name: 'Add new DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=add&ip={{ item.ipaddr }}&domain={{ item.name }}.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+    with_items: "{{ nodes }}"
+  - name: 'Add new api DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=add&ip={{ infra.ipaddr }}&domain=api.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+  - name: 'Add new api-int DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=add&ip={{ infra.ipaddr }}&domain=api-int.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+  - name: 'Add new application ingress DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=add&ip={{ infra.ipaddr }}&domain=*.apps.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}
+  - name: 'Add new bootstrap DNS records'
+    uri:
+      url: http://{{ dns.api_host}}:{{ dns.api_port }}/admin/api.php?customdns&action=add&ip={{ bootstrap.ipaddr }}&domain=bootstrap.{{ dns.clusterid }}.{{ dns.domain }}&auth={{ dns.api_key }}

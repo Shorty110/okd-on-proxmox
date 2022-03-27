@@ -1,0 +1,19 @@
+---
+# Setup OKD4 Helper Node
+
+- hosts: infra
+  vars_files:
+    - ../vars/okd.yml
+  handlers:
+  - import_tasks: ../handlers/main.yml
+  tasks:
+  - name: Generate pxe config files
+    block:
+    - name: Set the node specific tftp files
+      template:
+        src: ../templates/pxe.j2
+        dest: "/var/lib/tftpboot/pxelinux.cfg/01-{{ item.macaddr | regex_replace (':', '-')}}"
+        mode: 0555
+      with_items: "{{ nodes }}"
+      notify:
+        - restart tftp

@@ -1,0 +1,17 @@
+---
+- name: 'Configure DHCP'
+  hosts: router
+  vars_files:
+    - ../vars/okd.yml
+  tasks:
+  - name: 'Delete old DHCP reservations'
+    edgeos_config:
+      lines:
+      - 'delete service dhcp-server shared-network-name {{ dhcp.shared_network_name }} subnet {{ dhcp.subnet }} static-mapping {{ item.name }}'
+    with_items: "{{ nodes }}"
+  - name: 'Set new DHCP reservations'
+    edgeos_config:
+      lines:
+      - 'set service dhcp-server shared-network-name {{ dhcp.shared_network_name }} subnet {{ dhcp.subnet }} static-mapping {{ item.name }} ip-address {{ item.ipaddr }}'
+      - 'set service dhcp-server shared-network-name {{ dhcp.shared_network_name }} subnet {{ dhcp.subnet }} static-mapping {{ item.name }} mac-address {{ item.macaddr }}'
+    with_items: "{{ nodes }}"

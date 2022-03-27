@@ -1,0 +1,3 @@
+kernel http://{{ infra.ipaddr }}:{{ infra.http_port }}/install/{{ okd.kernel_file }} initrd=main coreos.live.rootfs_url=http://http://{{ infra.ipaddr }}:{{ infra.http_port }}/install/{{ okd.rootfs_file }} coreos.inst.install_dev={{ disk }} coreos.inst.ignition_url=http://{{ infra.ipaddr }}:{{ infra.http_port }}/ignition/{{ item.role }}.ign 
+initrd --name main http://{{ infra.ipaddr }}:{{ infra.http_port }}/install/{{ okd.initramfs_file }}
+boot 

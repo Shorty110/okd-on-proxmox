@@ -1,0 +1,12 @@
+- name: Configure DHCP
+  include: dhcp-setup.yml
+- name: Configure DNS
+  include: dns-setup.yml
+- name: Prepare infra host
+  include: infra-setup.yml
+- name: Prepare cluster config
+  include: cluster-config.yml
+- name: Prepare PXE config
+  include: pxe-setup.yml
+- name: Setup VMs
+  include: vm-setup.yml

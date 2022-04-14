@@ -10,4 +10,4 @@ inspired by https://github.com/hagen-bauer/Ansible-4-Openshift-on-Proxmox
 
 ## Open Topics
 + machine-config operator fails to initialize: Solved by running `oc delete mc 99-master-okd-extensions 99-okd-master-disable-mitigations` after bootstrap finished (https://github.com/openshift/okd/issues/963)
-+ Ansible vault secret for ssh_pub_key in vars/okd.yml, replace it with a clear-text public key 
++ Ansible vault secret for ssh_pub_key in vars/okd.yml does not work, replace it with a clear-text public key 

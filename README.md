@@ -8,5 +8,6 @@ inspired by https://github.com/hagen-bauer/Ansible-4-Openshift-on-Proxmox
 + Proxmox cluster with three nodes with proxmoxer python modul installed
 + Ansible playbooks are executed on infra VM (tested with Rocky Linux 8) hosting tftp server, ha proxy as loadbalancer, apache webserver for ignition files
 
-## Issues
+## Open Topics
 + machine-config operator fails to initialize: Solved by running `oc delete mc 99-master-okd-extensions 99-okd-master-disable-mitigations` after bootstrap finished (https://github.com/openshift/okd/issues/963)
++ Ansible vault secret for ssh_pub_key in vars/okd.yml, replace it with a clear-text public key 

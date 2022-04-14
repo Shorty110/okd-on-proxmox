@@ -16,16 +16,14 @@ defaults:
   bios: "seabios"
   onboot: 'yes'
   ostype: 'l26'
-  vcpus: '2'
-  cores: '2'
-  memory: '12288'
-  swap: '0'
   scsihw: 'virtio-scsi-pci'
   net: '"net0"'
   bridge: 'vmbr0'
   vlan: '50'
   firewall: '1'
-  boot: 'an'
+  boot: 'cn'
+  bootdisk: 'scsi0'
+  swap: '0'
 
 vmidprefix: 7
 
@@ -36,42 +34,54 @@ nodes:
     role: bootstrap
     vmid: 101
     node: "hv03"
-    sata: '{"sata0":"local-lvm:30"}'
+    scsi: '{"scsi0":"local-lvm:100"}'
+    cores: '4'
+    memory: '12288'
   - name: "okd-master-1"
     ipaddr: "192.168.50.101"
     macaddr: "c2:cd:5c:84:1a:ef"
     role: master
     vmid: 201
     node: "hv01"
-    sata: '{"sata0":"ceph-vm:30"}'
+    scsi: '{"scsi0":"local-lvm:100"}'
+    cores: '4'
+    memory: '16384'
   - name: "okd-master-2"
     ipaddr: "192.168.50.102"
-    macaddr: "8a:5c:7d:74:21:b4" 
+    macaddr: "8a:5c:7d:74:21:b4"
     role: master
     vmid: 202
     node: "hv02"
-    sata: '{"sata0":"ceph-vm:30"}'
+    scsi: '{"scsi0":"local-lvm:100"}'
+    cores: '4'
+    memory: '16384'
   - name: "okd-master-3"
     ipaddr: "192.168.50.103"
-    macaddr: "96:62:3b:cd:d3:27" 
+    macaddr: "96:62:3b:cd:d3:27"
     role: master
     vmid: 203
     node: "hv03"
-    sata: '{"sata0":"ceph-vm:30"}'
+    scsi: '{"scsi0":"local-lvm:100"}'
+    cores: '4'
+    memory: '16384'
   - name: "okd-worker-1"
     ipaddr: "192.168.50.201"
-    macaddr: "0e:e5:32:69:97:97" 
-    role: worker 
+    macaddr: "0e:e5:32:69:97:97"
+    role: worker
     vmid: 301
     node: "hv01"
-    sata: '{"sata0":"local-lvm:30"}'
+    scsi: '{"scsi0":"local-lvm:100"}'
+    cores: '2'
+    memory: '8192'
   - name: "okd-worker-2"
     ipaddr: "192.168.50.202"
-    macaddr: "32:0a:33:3a:88:e4" 
-    role: worker 
+    macaddr: "32:0a:33:3a:88:e4"
+    role: worker
     vmid: 302
     node: "hv02"
-    sata: '{"sata0":"local-lvm:30"}'
+    scsi: '{"scsi0":"local-lvm:100"}'
+    cores: '2'
+
 
 bootstrap:
   ipaddr: "192.168.50.101"
